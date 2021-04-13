@@ -19,8 +19,7 @@ function App() {
         <Route path="/home" component={Home}/>
         <Route path="/user" component={User} />
         <Route path="/store" component={Store} />
-      </div>
-      
+      </div>      
     </div>
   );
 }

@@ -91,7 +91,7 @@ export default function StickyHeadTable() {
   const updateStatus = async (status, id) => {
     // console.log(status, id);
     await db.collection('store').doc(id).update({status: Number(status)});
-    getData()
+    getData();
   }
 
   const getData = () => {
@@ -106,7 +106,7 @@ export default function StickyHeadTable() {
         user.map(item => {
             rowsData.push(createData(item.name, item.phone, item.address, null, handleButton(item.status, item.idStore)))
         })
-        console.log(rowsData);
+        // console.log(rowsData);
         setRows(rowsData);
     });
   }

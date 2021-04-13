@@ -1,5 +1,5 @@
 import Store from '../components/Store';
-import StoreManager from '../components/StoreManager';
+
 
 function StorePage() {
     return(
