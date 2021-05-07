@@ -6,7 +6,6 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import HomeIcon from '@material-ui/icons/Home';
@@ -15,12 +14,11 @@ import StoreIcon from '@material-ui/icons/Store';
 import CommentIcon from '@material-ui/icons/Comment';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Navigation } from '@material-ui/icons';
+import { AttachMoney, Navigation } from '@material-ui/icons';
 
 
 const drawerWidth = 240;
@@ -59,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   
 }));
 
-function ResponsiveDrawer(props) {
+function Home(props) {
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -80,7 +78,9 @@ function ResponsiveDrawer(props) {
         case 2:
             document.location.href = '/store';
             break;
-
+        case 3:
+            document.location.href = '/feedback';
+            break;
     }
   }
 
@@ -169,8 +169,8 @@ function ResponsiveDrawer(props) {
   );
 }
 
-ResponsiveDrawer.propTypes = {
-  window: PropTypes.func,
-};
+// ResponsiveDrawer.propTypes = {
+//   window: PropTypes.func,
+// };
 
-export default ResponsiveDrawer;
+export default Home;

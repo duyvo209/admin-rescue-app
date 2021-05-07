@@ -12,10 +12,12 @@ import { auth, db } from '../../firebase';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import StarIcon from '@material-ui/icons/Star';
+import StarHalfIcon from '@material-ui/icons/StarHalf';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 const useStyles1 = makeStyles((theme) => ({
   formControl: {
@@ -34,7 +36,7 @@ const columns = [
     id: 'address',
     label: 'Địa chỉ',
     minWidth: 170,
-    align: 'right',
+    // align: 'right',
     format: (value) => value.toLocaleString('en-US'),
   },
   {
@@ -53,8 +55,8 @@ const columns = [
   }
 ];
 
-function createData(name, phone, address, rating, status) {
-  return { name, phone, address, rating, status };
+function createData(name, phone, address, rating, ratingNumber, status, statusNumber ) {
+  return { name, phone, address, rating, ratingNumber, status, statusNumber };
 }
 
 const useStyles = makeStyles({
@@ -74,10 +76,11 @@ export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = React.useState([]);
+  const [rowsTemp, setRowsTemp] = React.useState([]);
   const [data, setData] = React.useState([]);
 
   const [status, setStatus] = React.useState(2);
-  const [rating, setRating] = React.useState('');
+  const [rating, setRating] = React.useState(2);
 
 
 
@@ -88,26 +91,135 @@ export default function StickyHeadTable() {
       return <Button variant="contained" color="primary" onClick={() => updateStatus(1, id)}>Kích hoạt</Button>
   }
 
+  const handleRating = (rating) => {
+    if (rating == 5) {
+      return <p>
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+      </p>
+    }
+    if (rating == 4.5) {
+      return <p>
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarHalfIcon style={{color: 'orange'}} />
+      </p>
+    }
+    if (rating == 4) {
+      return <p>
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+      </p>
+    }
+    if (rating == 3.5) {
+      return <p>
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarHalfIcon style={{color: 'orange'}} />
+      </p>
+    }
+    if (rating == 3) {
+      return <p>
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+      </p>
+    }
+    if (rating == 2.5) {
+      return <p>
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+        <StarHalfIcon style={{color: 'orange'}} />
+      </p>
+    }
+    if (rating == 2) {
+      return <p>
+        <StarIcon style={{color: 'orange'}} />
+        <StarIcon style={{color: 'orange'}} />
+      </p>
+    }
+    if (rating == 1.5) {
+      return <p>
+        <StarIcon style={{color: 'orange'}} />
+        <StarHalfIcon style={{color: 'orange'}} />
+      </p>
+    }
+    if (rating == 1) {
+      return <p><StarIcon style={{color: 'orange'}} /></p>
+    }
+    if (rating == 0.5) {
+      return <p><StarHalfIcon style={{color: 'orange'}} /></p>
+    }
+    if (rating == 0) {
+      return <p><StarBorderIcon style={{color: 'orange'}} />
+      <StarBorderIcon style={{color: 'orange'}} />
+      <StarBorderIcon style={{color: 'orange'}} />
+      <StarBorderIcon style={{color: 'orange'}} />
+      <StarBorderIcon style={{color: 'orange'}} /></p>
+    }
+      
+
+  }
+
   const updateStatus = async (status, id) => {
     // console.log(status, id);
     await db.collection('store').doc(id).update({status: Number(status)});
     getData();
   }
 
-  const getData = () => {
-    db.collection('store').get().then( snapshot => {
+
+  const getData = async () => {
+    await db.collection('store').orderBy('status', 'asc').get().then( snapshot => {
         const user = [];
         snapshot.forEach(doc => {
             const data = doc.data();
             user.push(data);
         });
         setData(user)
-        const rowsData = [];
-        user.map(item => {
-            rowsData.push(createData(item.name, item.phone, item.address, null, handleButton(item.status, item.idStore)))
+        setRows([]);
+        setRowsTemp([]);
+        user.map(async (item, index) => {
+            db.collection('feedback').where('storeId', '==', item.idStore).get()
+            .then((snapshot) => {
+              const size = snapshot.size;
+              let rating = 0;
+              snapshot.forEach(doc => {
+                rating += doc.data().rating
+              })  
+                setRows(previous => [
+                    ...previous,
+                    {
+                      name: item.name,
+                      phone: item.phone,
+                      address: item.address,
+                      rating: handleRating(Number(rating)/size ? Number(rating)/size : ''),
+                      ratingNumber: Number(rating)/size ? Number(rating)/size : 0,
+                      status: handleButton(item.status, item.idStore),
+                      statusNumber: item.status
+                    }
+                ])
+                setRowsTemp(previous => [
+                  ...previous,
+                  {
+                    name: item.name,
+                    phone: item.phone,
+                    address: item.address,
+                    rating: handleRating(Number(rating)/size ? Number(rating)/size : ''),
+                    ratingNumber: Number(rating)/size ? Number(rating)/size : 0,
+                    status: handleButton(item.status, item.idStore),
+                    statusNumber: item.status,
+                  }
+              ])
+            })
         })
-        // console.log(rowsData);
-        setRows(rowsData);
     });
   }
 
@@ -115,28 +227,47 @@ export default function StickyHeadTable() {
     getData()
   },[])
 
-  const handleChangeStatus = (event) => {
+  const handleChangeStatus = (event) => {   
+    // 0: chua kich hoat
+    // 1: kich hoat
+    // 2: tat ca
     setStatus(event.target.value);
     setRows([])
-    const newData = data.filter(item => {
+    const newData = rowsTemp.filter(item => {
       if(event.target.value == 2) {
         return item
       } else {
-        return item.status == event.target.value
+        return item.statusNumber == event.target.value
       }
     })
-    newData.map(item => {
-      setRows(previous => [
-          ...previous,
-          createData(item.name, item.phone, item.address, null, handleButton(item.status)),
-      ])
-    })
-    
+    setRows(newData)
+    // newData.map(item => {
+    //   setRows(previous => [
+    //       ...previous,
+    //       createData(item.name, item.phone, item.address, null, handleButton(item.status)),
+    //   ])
+      
+    // })
   };
   
 
-  const handleChangeRating = (event) => {
-      setRating(event.target.value);
+  const handleChangeRating = async (data, value) => {
+    setRating(value)
+    setRows([])
+    if(value == 1) {
+      const newData = await data.sort((a, b) => {
+        return a.ratingNumber- b.ratingNumber
+      })
+      console.log(newData);
+      setRows(newData)
+    } else if(value == 0) {
+      const newData = await data.sort((a, b) => {
+        return b.ratingNumber - a.ratingNumber
+      })
+      setRows(newData)
+    } else {
+      setRows(rowsTemp)
+    }
   }
 
   const HandlerSelector = () => {  
@@ -162,11 +293,11 @@ export default function StickyHeadTable() {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={rating}
-            onChange={handleChangeRating}
+            onChange={(e) => handleChangeRating(rows, e.target.value)}
           >
-            <MenuItem value={10}>Tất cả</MenuItem>
-            <MenuItem value={20}>Đánh giá tăng dần</MenuItem>
-            <MenuItem value={30}>Đánh giá giảm dần</MenuItem>
+            <MenuItem value={2}>Tất cả</MenuItem>
+            <MenuItem value={1}>Đánh giá tăng dần</MenuItem>
+            <MenuItem value={0}>Đánh giá giảm dần</MenuItem>
           </Select>
         </FormControl>
       
