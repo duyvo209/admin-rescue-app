@@ -42,10 +42,6 @@ const columns = [
   { id: 'storeId', label: 'Cửa hàng' }
 ]
 
-function createData(name) {
-  return { name };
-}
-
 export default function App() {
   const classes = useStyles();
   const [store, setStore] = React.useState([]);
