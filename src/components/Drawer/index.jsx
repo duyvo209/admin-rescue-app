@@ -15,6 +15,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
+import ErrorIcon from '@material-ui/icons/Error';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -81,6 +82,18 @@ function Home(props) {
         case 3:
             document.location.href = '/feedback';
             break;
+        case 4: 
+            document.location.href = '/report';
+            break;
+        case 5: 
+            document.location.href = '/service';
+            break;
+        case 6: 
+            document.location.href = '/problem';
+            break;
+        case 7: 
+            document.location.href = '/reportStore';
+            break;
     }
   }
 
@@ -97,9 +110,25 @@ function Home(props) {
           <ListItemIcon><PersonIcon /></ListItemIcon>
           <ListItemText primary="Quản lý tài khoản" />
         </ListItem>
+        <ListItem button key="Problem" onClick={() => handleLink(6)}>
+          <ListItemIcon><MenuIcon /></ListItemIcon>
+          <ListItemText primary="Quản lý vấn đề" />
+        </ListItem>
+        <ListItem button key="Service" onClick={() => handleLink(5)}>
+          <ListItemIcon><MenuIcon /></ListItemIcon>
+          <ListItemText primary="Quản lý dịch vụ" />
+        </ListItem>
         <ListItem button key="Store" onClick={() => handleLink(2)}>
           <ListItemIcon><StoreIcon /></ListItemIcon>
           <ListItemText primary="Quản lý cửa hàng" />
+        </ListItem>
+        <ListItem button key="ReportStore" onClick={() => handleLink(7)}>
+          <ListItemIcon><ErrorIcon /></ListItemIcon>
+          <ListItemText primary="Báo cáo cửa hàng" />
+        </ListItem>
+        <ListItem button key="Report" onClick={() => handleLink(4)}>
+          <ListItemIcon><ErrorIcon /></ListItemIcon>
+          <ListItemText primary="Báo cáo bình luận" />
         </ListItem>
         <ListItem button key="Comment" onClick={() => handleLink(3)}>
           <ListItemIcon><CommentIcon /></ListItemIcon>

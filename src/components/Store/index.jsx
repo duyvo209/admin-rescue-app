@@ -22,7 +22,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 const useStyles1 = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 200,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -40,10 +40,17 @@ const columns = [
     format: (value) => value.toLocaleString('en-US'),
   },
   {
+    id: 'size',
+    label: 'Lượt đánh giá',
+    minWidth: 100,
+    align: 'center',
+    format: (value) => value.toLocaleString('en-US'),
+  },
+  {
     id: 'rating',
     label: 'Đánh giá',
     minWidth: 170,
-    align: 'right',
+    align: 'center',
     format: (value) => value.toLocaleString('en-US'),
   },
   {
@@ -55,16 +62,16 @@ const columns = [
   }
 ];
 
-function createData(name, phone, address, rating, ratingNumber, status, statusNumber ) {
-  return { name, phone, address, rating, ratingNumber, status, statusNumber };
-}
+// function createData(name, phone, address, rating, ratingNumber, status, statusNumber ) {
+//   return { name, phone, address, rating, ratingNumber, status, statusNumber };
+// }
 
 const useStyles = makeStyles({
   root: {
     width: '100%',
   },
   container: {
-    maxHeight: 440,
+    maxHeight: '100%',
   },
 });
 
@@ -203,8 +210,10 @@ export default function StickyHeadTable() {
                       rating: handleRating(Number(rating)/size ? Number(rating)/size : ''),
                       ratingNumber: Number(rating)/size ? Number(rating)/size : 0,
                       status: handleButton(item.status, item.idStore),
-                      statusNumber: item.status
-                    }
+                      statusNumber: item.status,  
+                      size: size,               
+                    },
+                   
                 ])
                 setRowsTemp(previous => [
                   ...previous,
@@ -216,6 +225,7 @@ export default function StickyHeadTable() {
                     ratingNumber: Number(rating)/size ? Number(rating)/size : 0,
                     status: handleButton(item.status, item.idStore),
                     statusNumber: item.status,
+                    size: size,      
                   }
               ])
             })
@@ -286,7 +296,7 @@ export default function StickyHeadTable() {
             <MenuItem value={0}>Chưa kích hoạt</MenuItem>
           </Select>
         </FormControl>
-
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <FormControl className={classes1.formControl}>
           <InputLabel id="demo-simple-select-label">Đánh giá</InputLabel>
           <Select
